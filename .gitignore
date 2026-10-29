@@ -1,0 +1,18 @@
+# 系統與暫存
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+
+# data/：資料夾結構與說明、程式、小圖保留，資料檔不上傳（見 data/README.md）
+data/**/*.nc
+data/**/*.npy
+data/**/*.csv
+data/**/*.xlsx
+!data/drainage_xy_by_continent/Figures/*.csv
+
+# 論文 PDF 不上傳（見 README 的引用與 DOI）
+Paper/*.pdf
+
+# 舊版備份與已不再產生的 ERA5 圖
+Code/_backup/
+Code/Fig2_reproduce*.png

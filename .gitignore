@@ -15,4 +15,4 @@ Paper/*.pdf
 
 # 舊版備份與已不再產生的 ERA5 圖
 Code/_backup/
-Code/Fig2_reproduce*.png
+Figures/Fig2_reproduce*.png

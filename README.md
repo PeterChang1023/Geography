@@ -11,9 +11,8 @@
 ```
 Aerial-rivers/
 ├── Code/
-│   ├── Reproduce.ipynb          主筆記本：資料 → 經緯度 → 內插 → 分群 → Fig. 2 → 轉折點 / Fig. 3，附錄整理之前做法的錯誤
-│   ├── Fig2_GLEAMGPM.png        Fig. 2 重現
-│   └── Fig3_GLEAMGPM.png        Fig. 3 重現
+│   └── Reproduce.ipynb          主筆記本：資料 → 經緯度 → 內插 → 分群 → Fig. 2 → 轉折點 / Fig. 3，附錄整理之前做法的錯誤；第 7 節套到 ERA5 各洲
+├── Figures/                     筆記本產生的所有圖（Fig2_GLEAMGPM.png、Fig3_GLEAMGPM.png、各洲 ERA5 圖等）
 ├── Original_code_from_authors/  論文作者提供的原始程式與資料（見下）
 ├── Paper/                       論文 PDF 不放在 repo（見上方 DOI）；Zenodo/ 是論文附的軌跡追蹤程式
 ├── data/                        ERA5 排水曲線等資料，資料檔不放在 repo，見 data/README.md

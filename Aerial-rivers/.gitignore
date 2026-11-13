@@ -8,7 +8,6 @@ data/**/*.nc
 data/**/*.npy
 data/**/*.csv
 data/**/*.xlsx
-!data/drainage_xy_by_continent/Figures/*.csv
 
 # 論文 PDF 不上傳（見 README 的引用與 DOI）
 Paper/*.pdf

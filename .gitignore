@@ -1,0 +1,40 @@
+# ===== 系統與暫存 =====
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+*.log
+
+# ===== 資料（不上傳） =====
+*.nc
+*.nc4
+*.tif
+*.tiff
+*.grib
+*.grb
+*.npy
+*.npz
+*.csv
+*.xlsx
+*.xls
+*.mat
+*.geojson
+*.g66
+*.zip
+*.tar
+*.gz
+
+# ===== 圖片與 PDF（不上傳） =====
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pdf
+*.eps
+
+# ===== 備份與舊版 =====
+_backup/
+_old/
+_old_scripts/
+*.bak
+*~

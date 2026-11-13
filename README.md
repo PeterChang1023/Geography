@@ -1,43 +1,60 @@
-# Aerial rivers：重現 Weng et al. (2026) 的南美空中河流排水曲線
+# Aerial rivers: reproducing the drainage curves of South American aerial rivers (Weng et al., 2026)
 
-重現論文
+This repository reproduces
 
 > Weng et al. (2026). *Hydrological regimes and drainage systems of aerial rivers across South America*. Nature Communications 17:9341. https://doi.org/10.1038/s41467-026-76303-y
 
-的 **Fig. 2**（724 個 1.5° 格點的四種排水類型 G1–G4 與排水曲線）和 **Fig. 3**（各類型的轉折點）。算法照作者提供的原始程式，結果和論文一致：轉折點中位數 G1 95.3%、G2 68.6%、G3 48.0%、G4 35.5%，Sorriso 46.7%（論文 47%）。
+specifically **Fig. 2** (the four drainage types G1–G4 and their drainage curves for 724 grid cells at 1.5°) and **Fig. 3** (the turning point of each type). The algorithm follows the original code provided by the authors, and the results match the paper: median turning points are G1 95.3%, G2 68.6%, G3 48.0%, G4 35.5%, and Sorriso 46.7% (paper: 47%).
 
-## 資料夾結構
+The same algorithm is then applied to ERA5 drainage curves (2020–2025, 0.25°) for every continent and for the whole globe, and the curves are additionally analysed with EOFs.
+
+## Notebook contents (`Code/Reproduce.ipynb`)
+
+| Section | Content |
+|---|---|
+| 1–6 | Paper reproduction with GLEAM+GPM data: data, lat/lon of the 724 cells, interpolation to 1000 points, clustering (the paper's fixed groups, checked with k-means), Fig. 2, turning points / Fig. 3 |
+| Appendix | What was wrong with earlier attempts (data version, turning-point algorithm, linear vs. log k-means features, which axis to take ln of, lat/lon) |
+| 7.1–7.2 | Author's algorithm applied to ERA5 (`data/drainage_curves_land.nc`, WAM-2layers v3, land sources only): build curves for all land cells and compare curves cell by cell with the paper (no clustering) |
+| 7.3 | k-means reproduction on all 0.25° cells of the 7 South American AR6 regions (NWS, NSA, SAM, NES, SWS, SES, SSA), k = 4; choosing k with Calinski–Harabasz, Davies–Bouldin and the elbow method; comparison with the paper's groups (per 0.25° cell and majority vote back to 1.5°) |
+| 7.4–7.10 | Same clustering for each other continent using its own cells (North America, Europe, Africa, Asia, Oceania), with the cos(latitude) area correction; summary table, conclusions, and mistakes in earlier ERA5 attempts |
+| 8 | Global clustering: all 185,546 0.25° land cells clustered together with the Section 7 method (no split by continent) |
+| 9–9.2 | EOF analysis of the South American curves with `Code/EOF.py`: explained variance, EOF1/EOF2 shapes and PC maps, how each EOF modifies the mean curve |
+| 9.3 | EOF-based clustering (functional PCA + k-means): PC1 and PC2 (92.3% of the variance) → k-means with 4 groups, compared with Section 7.3 and with the paper |
+| 9.4–9.10 | The same EOF analysis for North America, Europe, Africa, Asia, Oceania and the globe, plus a summary table across regions |
+
+## Repository layout
 
 ```
 Aerial-rivers/
 ├── Code/
-│   └── Reproduce.ipynb          主筆記本：資料 → 經緯度 → 內插 → 分群 → Fig. 2 → 轉折點 / Fig. 3，附錄整理之前做法的錯誤；第 7 節套到 ERA5 各洲
-├── Figures/                     筆記本產生的所有圖（Fig2_GLEAMGPM.png、Fig3_GLEAMGPM.png、各洲 ERA5 圖等）
-├── Original_code_from_authors/  論文作者提供的原始程式與資料（見下）
-├── Paper/                       論文 PDF 不放在 repo（見上方 DOI）；Zenodo/ 是論文附的軌跡追蹤程式
-├── data/                        ERA5 排水曲線等資料，資料檔不放在 repo，見 data/README.md
-└── scripts/                     把 data/ 的 nc 依洲切割成 CSV 的腳本
+│   ├── Reproduce.ipynb          Main notebook (see the table above)
+│   └── EOF.py                   EOF helper (sklearn PCA) used in Section 9; `dataset` must be a tuple
+├── Figures/                     Figures produced by the notebook (Fig2_GLEAMGPM.png, Fig3_GLEAMGPM.png, ERA5 figures per continent, EOF figures, etc.)
+├── Original_code_from_authors/  Original code and data from the paper's authors (see below)
+├── Paper/                       The paper PDF is not in the repo (see the DOI above); Zenodo/ holds the paper's moisture-tracking code
+├── data/                        ERA5 drainage curves and other data; data files are not in the repo, see data/README.md
+└── scripts/                     Script that splits the .nc files in data/ into per-continent CSVs
 ```
 
 ## Original_code_from_authors/
 
-論文作者提供的檔案，原樣保留：
+Files provided by the paper's authors, kept unchanged:
 
-| 檔案 | 內容 |
+| File | Content |
 |---|---|
-| `Turningpoint_peak.ipynb` | 作者算轉折點、畫 Fig. 3 與 Fig. S5 的程式 |
-| `gleamgpm_0615_pversion_allpoint_con.npy` | (724, 725)，每個格點的累積貢獻 C（%），GLEAM+GPM 2006–2015 |
-| `gleamgpm_0615_pversion_allpoint_area.npy` | (724, 725)，對應的上風盆地面積（平方度，每格 2.25） |
-| `group_fix_4groups.txt` | 44 × 38 網格上的固定分群（0 = 非陸地，1–4 = G1–G4） |
+| `Turningpoint_peak.ipynb` | The authors' code for the turning points, Fig. 3 and Fig. S5 |
+| `gleamgpm_0615_pversion_allpoint_con.npy` | (724, 725), cumulative contribution C (%) for each cell, GLEAM+GPM 2006–2015 |
+| `gleamgpm_0615_pversion_allpoint_area.npy` | (724, 725), corresponding upwind basin area (square degrees, 2.25 per cell) |
+| `group_fix_4groups.txt` | Fixed grouping on the 44 × 38 grid (0 = non-land, 1–4 = G1–G4) |
 
-## 怎麼跑
+## How to run
 
-使用 `Geography` conda 環境（Python 3.12），需要的套件：numpy、scipy、scikit-learn、matplotlib（`data/` 相關腳本另外需要 xarray、netCDF4、pandas）。
+Use the `Geography` conda environment (Python 3.12). Required packages: numpy, scipy, scikit-learn, matplotlib (the ERA5 sections and the `data/` scripts also need xarray, netCDF4 and pandas).
 
 ```bash
 conda activate Geography
-python -m ipykernel install --user --name geography --display-name "Python (Geography)"   # 第一次才需要
+python -m ipykernel install --user --name geography --display-name "Python (Geography)"   # first time only
 jupyter nbconvert --to notebook --execute --inplace Code/Reproduce.ipynb --ExecutePreprocessor.kernel_name=geography
 ```
 
-或在 VS Code / Jupyter 開 `Code/Reproduce.ipynb`，選 kernel「Python (Geography)」後全部執行。`Reproduce.ipynb` 只需要 `Original_code_from_authors/` 裡的檔案，不需要 `data/`。
+Or open `Code/Reproduce.ipynb` in VS Code / Jupyter, select the "Python (Geography)" kernel, and run all cells. Sections 1–6 only need the files in `Original_code_from_authors/`; Sections 7–9 also need `data/drainage_curves_land.nc` (see `data/README.md`).
